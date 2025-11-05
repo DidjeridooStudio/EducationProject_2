@@ -100,7 +100,7 @@ MonoBehaviour:
   _rotateSpeed: 100
   _destroyTimeAfterUse: 0.3
   _explodeEffect: {fileID: 7367306348964195919}
-  _addedSpeed: 10
+  _addedSpeed: 5
 --- !u!1001 &3706748822673688923
 PrefabInstance:
   m_ObjectHideFlags: 0
