@@ -5,12 +5,11 @@ namespace HW16_17
 {
     public class PatrolIdleBehavior : ImplementsMovementBehavior, IIdleBehavior
     {
+        private Vector3 _currentTarget;
         private Queue<Vector3> _targetsPosition;
 
-        public PatrolIdleBehavior(Transform objectTransform, List<Transform> targetsTransform)
+        public PatrolIdleBehavior(Transform objectTransform, List<Transform> targetsTransform) : base(objectTransform)
         {
-            _objectTransform = objectTransform;
-
             _targetsPosition = new Queue<Vector3>();
 
             foreach (Transform targetTransform in targetsTransform)

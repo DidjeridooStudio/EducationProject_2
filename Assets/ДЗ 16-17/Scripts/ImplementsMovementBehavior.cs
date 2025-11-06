@@ -4,11 +4,15 @@ namespace HW16_17
 {
     public abstract class ImplementsMovementBehavior
     {
-        protected const float MoveSpeed = 5f;
-        protected const float MinDistanceToTarget = 0.05f;
+        private const float MoveSpeed = 5f;
+        private const float MinDistanceToTarget = 0.05f;
 
-        protected Vector3 _currentTarget;
-        protected Transform _objectTransform;
+        private Transform _objectTransform;
+
+        protected ImplementsMovementBehavior(Transform objectTransform)
+        {
+            _objectTransform = objectTransform;
+        }
 
         protected Vector3 DirectionToTarget(Vector3 targetPosition) => DistanceDetector.DirectionToTarget(targetPosition, _objectTransform.position);
 

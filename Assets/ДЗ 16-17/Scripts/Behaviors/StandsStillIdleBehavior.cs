@@ -6,9 +6,10 @@ namespace HW16_17
 {
     public class StandsStillIdleBehavior : ImplementsMovementBehavior, IIdleBehavior
     {
-        public StandsStillIdleBehavior(Transform objectTransform)
+        private Vector3 _currentTarget;
+
+        public StandsStillIdleBehavior(Transform objectTransform) : base(objectTransform)
         {
-            _objectTransform = objectTransform;
             _currentTarget = objectTransform.position;
         }
 

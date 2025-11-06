@@ -4,14 +4,15 @@ namespace HW16_17
 {
     public class RandomWalkIdleBehavior : ImplementsMovementBehavior, IIdleBehavior
     {
+        private Vector3 _currentTarget;
+
         private const float ShiftTime = 1f;
 
         private float _time;
 
-        public RandomWalkIdleBehavior(Transform objectTransform)
+        public RandomWalkIdleBehavior(Transform objectTransform) : base(objectTransform)
         {
             _currentTarget = RandomVector();
-            _objectTransform = objectTransform;
         }
 
         private Vector3 RandomVector()

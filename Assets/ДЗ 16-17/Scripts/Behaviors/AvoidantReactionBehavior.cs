@@ -6,9 +6,9 @@ namespace HW16_17
     public class AvoidantReactionBehavior : ImplementsMovementBehavior, IReactionBehavior
     {
         private Transform _characterTransform;
-        public AvoidantReactionBehavior(Transform objectTransform, Transform characterTransform)
+
+        public AvoidantReactionBehavior(Transform objectTransform, Transform characterTransform) : base(objectTransform)
         {
-            _objectTransform = objectTransform;
             _characterTransform = characterTransform;
         }
 

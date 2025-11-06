@@ -6,9 +6,9 @@ namespace HW16_17
     public class AgressiveReactionBehavior : ImplementsMovementBehavior, IReactionBehavior
     {
         private Transform _characterTransform;
-        public AgressiveReactionBehavior(Transform objectTransform, Transform characterTransform)
+
+        public AgressiveReactionBehavior(Transform objectTransform, Transform characterTransform) : base(objectTransform)
         {
-            _objectTransform = objectTransform;
             _characterTransform = characterTransform;
         }
 
