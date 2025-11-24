@@ -11,14 +11,10 @@ namespace HW20_21
         private const int LeftMouseButton = 0;
         private const int RightMouseButton = 1;
 
-        private GameObject _selectedObject;
-        private Vector3 _pointScreen;
-        [SerializeField] private LayerMask _layerMask;
-
         private void Awake()
         {
             _mainCamera = Camera.main;
-            _porter = new Porter(_layerMask);
+            _porter = new Porter();
         }
 
         private void Update()

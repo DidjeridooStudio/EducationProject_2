@@ -8,13 +8,12 @@ namespace HW20_21
     {
         [SerializeField] private Wind _wind;
         [SerializeField] private Transform _sailsTransform;
-        [SerializeField] private float _forceSpeed;
         [SerializeField] private TMP_Text _forceText;
 
         private Rigidbody _rigidbody;
 
         private bool _isMoving;
-        private float _windDotProduct;
+        private float _forceSpeed;
 
         private void Awake()
         {
@@ -23,18 +22,20 @@ namespace HW20_21
 
         private void Update()
         {
-            _windDotProduct = Vector3.Dot(_wind.Direction.normalized, _sailsTransform.forward.normalized);
+            float windDotProduct = Vector3.Dot(_wind.Direction.normalized, _sailsTransform.forward.normalized);
             float shipDotProduct = Vector3.Dot(transform.forward.normalized, _sailsTransform.forward.normalized);
 
-            _isMoving = _windDotProduct > 0.01f && shipDotProduct > 0.01f;
+            _isMoving = windDotProduct > 0.01f && shipDotProduct > 0.01f;
 
-            _forceText.text = _isMoving ? "Speed:" + _windDotProduct * _wind.Force : "Speed: 0";
+            _forceSpeed = windDotProduct * shipDotProduct * _wind.Force;
+
+            _forceText.text = _isMoving ? "Speed:" + _forceSpeed : "Speed: 0";
         }
 
         private void FixedUpdate()
         {
             if (_isMoving)
-                _rigidbody.AddRelativeForce(Vector3.forward * _windDotProduct * _wind.Force);
+                _rigidbody.AddRelativeForce(Vector3.forward * _forceSpeed);
         }
     }
 }

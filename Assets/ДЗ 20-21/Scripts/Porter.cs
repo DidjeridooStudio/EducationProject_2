@@ -4,14 +4,12 @@ namespace HW20_21
 {
     public class Porter
     {
-        private GameObject _selectedObject;
+        private IDraggable _selectedObject;
         private Vector3 _pointScreen;
-        private LayerMask _layerMask;
         private Camera _mainCamera;
 
-        public Porter(LayerMask layerMask)
+        public Porter()
         {
-            _layerMask = layerMask;
             _mainCamera = Camera.main;
         }
 
@@ -19,10 +17,15 @@ namespace HW20_21
         {
             Ray ray = new Ray(origin, direction);
 
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _layerMask.value))
+            if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
-                _selectedObject = hitInfo.collider.gameObject;
-                _pointScreen = _mainCamera.WorldToScreenPoint(_selectedObject.transform.position);
+                _selectedObject = hitInfo.collider.gameObject.GetComponent<IDraggable>();
+
+                if (_selectedObject == null)
+                    return;
+
+                _pointScreen = _mainCamera.WorldToScreenPoint(_selectedObject.Position);
+                _selectedObject.OnGrab();
             }
         }
 
@@ -32,13 +35,16 @@ namespace HW20_21
             {
                 Vector3 currentScreenPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _pointScreen.z);
                 Vector3 currentWorldPosition = _mainCamera.ScreenToWorldPoint(currentScreenPosition);
-                _selectedObject.transform.position = new Vector3(currentWorldPosition.x, Mathf.Clamp(currentWorldPosition.y, 0, 10), currentWorldPosition.z);
-                _selectedObject.transform.rotation = Quaternion.identity;
+                _selectedObject.Drag(new Vector3(currentWorldPosition.x, Mathf.Clamp(currentWorldPosition.y, 0, 10), currentWorldPosition.z));
             }
         }
 
         public void PutObjectDown()
         {
+            if (_selectedObject == null)
+                return;
+
+            _selectedObject.OnRelease();
             _selectedObject = null;
         }
     }
