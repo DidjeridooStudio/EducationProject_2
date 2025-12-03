@@ -1,0 +1,79 @@
+using HW22_23;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+
+namespace HW24_25
+{
+    public class FirstAidKitSpawner : MonoBehaviour
+    {
+        private const KeyCode PowerKeyCode = KeyCode.F;
+
+        [SerializeField] private Transform _transform;
+        [SerializeField] private float _spawnRadius;
+        [SerializeField] private float _spawnTime;
+        [SerializeField] private GameObject _firstAidKitPrefab;
+
+        private float _timeForSpawn;
+        private Coroutine _spawnProcess;
+        private NavMeshQueryFilter _queryFilter;
+        private NavMeshPath _pathToTarget;
+
+        public bool InProcess => _spawnProcess != null;
+
+        private void Awake()
+        {
+            _timeForSpawn = _spawnTime;
+            _pathToTarget = new NavMeshPath();
+
+            _queryFilter = new NavMeshQueryFilter();
+            _queryFilter.agentTypeID = 0;
+            _queryFilter.areaMask = NavMesh.AllAreas;
+        }
+
+        private void Update()
+        {
+            if(Input.GetKeyDown(PowerKeyCode))
+            {
+                if (InProcess)
+                    StopCoroutine(_spawnProcess);
+                else
+                    StartCoroutine(SpawnProcess());
+            }
+        }
+
+        private IEnumerator SpawnProcess()
+        {
+            while(true)
+            {
+                while (_timeForSpawn >= 0)
+                {
+                    _timeForSpawn -= Time.deltaTime;
+                    yield return null;
+                }
+
+                _timeForSpawn = _spawnTime;
+
+                Vector3 _spawnPosition = Vector3.zero;
+
+                while(_spawnPosition == Vector3.zero)
+                {
+                    _spawnPosition = GenerateSpawnPosition();
+                    yield return null;
+                }
+
+                Instantiate(_firstAidKitPrefab, _spawnPosition, Quaternion.identity);
+            }
+        }
+
+        private Vector3 GenerateSpawnPosition()
+        {
+            Vector3 randomPosition = Random.insideUnitSphere * _spawnRadius + _transform.position;
+
+            if (NavMeshUtils.TryGetPath(_transform.position, randomPosition, _queryFilter, _pathToTarget))
+                return new Vector3(randomPosition.x, 0, randomPosition.z);
+
+            return Vector3.zero;
+        }
+    }
+}

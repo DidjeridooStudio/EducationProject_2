@@ -1,34 +1,37 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Health))]
-public class Character : MonoBehaviour
+namespace HW14_15
 {
-    [SerializeField] private ItemHolder _itemHolder;
-
-    private Health _health;
-
-    private const KeyCode UseItemKey = KeyCode.F;
-
-    private void Awake()
+    [RequireComponent(typeof(Health))]
+    public class Character : MonoBehaviour
     {
-        _health = GetComponent<Health>();
-        Debug.Log($"ХП персонажа: {_health.Value}");
-    }
+        [SerializeField] private ItemHolder _itemHolder;
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(UseItemKey))
+        private Health _health;
+
+        private const KeyCode UseItemKey = KeyCode.F;
+
+        private void Awake()
         {
-            UseItem();
+            _health = GetComponent<Health>();
+            Debug.Log($"ХП персонажа: {_health.Value}");
         }
-    }
 
-    private void UseItem()
-    {
-        if (_itemHolder.IsEmpty)
-            Debug.Log("Нет предмета для использования");
-        else
-            _itemHolder.Item.Use(gameObject);
+        private void Update()
+        {
+            if (Input.GetKeyDown(UseItemKey))
+            {
+                UseItem();
+            }
+        }
+
+        private void UseItem()
+        {
+            if (_itemHolder.IsEmpty)
+                Debug.Log("Нет предмета для использования");
+            else
+                _itemHolder.Item.Use(gameObject);
+        }
     }
 }

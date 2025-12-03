@@ -1,18 +1,21 @@
 using UnityEngine;
 
-public class Health : MonoBehaviour
+namespace HW14_15
 {
-    [SerializeField] private int _value;
-
-    public int Value => _value;
-
-    public void Heal(int value)
+    public class Health : MonoBehaviour
     {
-        if (value < 0)
-            Debug.LogError("Передано отрицательное значение в метод Heal");
+        [SerializeField] private int _value;
 
-        _value += value;
+        public int Value => _value;
 
-        Debug.Log($"Здоровье персонажа увеличено на {value} ед. ХП персонажа: {_value}");
+        public void Heal(int value)
+        {
+            if (value < 0)
+                Debug.LogError("Передано отрицательное значение в метод Heal");
+
+            _value += value;
+
+            Debug.Log($"Здоровье персонажа увеличено на {value} ед. ХП персонажа: {_value}");
+        }
     }
 }
