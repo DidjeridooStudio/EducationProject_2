@@ -1,5 +1,6 @@
 using HW22_23;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,6 +14,7 @@ namespace HW24_25
         [SerializeField] private float _spawnRadius;
         [SerializeField] private float _spawnTime;
         [SerializeField] private GameObject _firstAidKitPrefab;
+        [SerializeField] private TMP_Text _tMP_Text;
 
         private float _timeForSpawn;
         private Coroutine _spawnProcess;
@@ -36,9 +38,16 @@ namespace HW24_25
             if(Input.GetKeyDown(PowerKeyCode))
             {
                 if (InProcess)
+                {
                     StopCoroutine(_spawnProcess);
+                    _spawnProcess = null;
+                    _tMP_Text.text = "Spawn first aid kit off";
+                }
                 else
-                    StartCoroutine(SpawnProcess());
+                {
+                    _spawnProcess = StartCoroutine(SpawnProcess());
+                    _tMP_Text.text = "Spawn first aid kit on";
+                }
             }
         }
 

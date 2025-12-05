@@ -1,6 +1,7 @@
 using HW22_23;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 namespace HW24_25
 {
@@ -12,6 +13,7 @@ namespace HW24_25
         private const float MinDistanceToTarget = 0.05f;
 
         private IDirectionalMovable _movable;
+        private ISetTargetPosition _setTargetPosition;
         private NavMeshQueryFilter _queryFilter;
         private NavMeshPath _pathToTarget;
         private Camera _mainCamera;
@@ -23,7 +25,7 @@ namespace HW24_25
 
         public Vector3 TargetPosition => _targetPosition;
 
-        public PlayerDirectionalMovableMouseController(IDirectionalMovable movable, NavMeshQueryFilter queryFilter, LayerMask groundLayerMask)
+        public PlayerDirectionalMovableMouseController(IDirectionalMovable movable, NavMeshQueryFilter queryFilter, LayerMask groundLayerMask, ISetTargetPosition setTargetPosition)
         {
             _movable = movable;
             _queryFilter = queryFilter;
@@ -32,6 +34,7 @@ namespace HW24_25
             _mainCamera = Camera.main;
             _pathToTarget = new NavMeshPath();
             _targetPosition = Vector3.zero;
+            _setTargetPosition = setTargetPosition;
         }
 
         protected override void UpdateLogic(float deltaTime)
@@ -43,14 +46,13 @@ namespace HW24_25
                 TryGetTargetPosition();
             else
                 _movable.SetMoveDirection(Vector3.zero);
-
         }
 
         private void SetTargerPosition()
         {
             Ray Ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(Ray, out RaycastHit hitinfo, 100, _groundLayerMask))
+            if (Physics.Raycast(Ray, out RaycastHit hitinfo, 100, _groundLayerMask) && EventSystem.current.IsPointerOverGameObject() == false)
                 _targetPosition = hitinfo.point;
             else
                 _targetPosition = Vector3.zero;
@@ -70,6 +72,7 @@ namespace HW24_25
 
                 Vector3 direction = _pathToTarget.corners[TargetCornerIndex] - _pathToTarget.corners[StartCornerIndex];
                 _movable.SetMoveDirection(direction);
+                _setTargetPosition.SetTargetPosition(_targetPosition);
 
                 return;
             }

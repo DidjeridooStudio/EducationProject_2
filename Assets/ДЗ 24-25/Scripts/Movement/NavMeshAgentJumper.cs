@@ -8,12 +8,14 @@ public class NavMeshAgentJumper
     private NavMeshAgent _agent;
     private MonoBehaviour _coroutinesRunner;
     private Coroutine _jumpProcess;
+    private AnimationCurve _jumpCurve;
 
-    public NavMeshAgentJumper(float jumpSpeed, NavMeshAgent agent, MonoBehaviour coroutinesRunner)
+    public NavMeshAgentJumper(float jumpSpeed, NavMeshAgent agent, MonoBehaviour coroutinesRunner, AnimationCurve jumpCurve)
     {
         _jumpSpeed = jumpSpeed;
         _agent = agent;
         _coroutinesRunner = coroutinesRunner;
+        _jumpCurve = jumpCurve;
     }
 
     public bool InProcess => _jumpProcess != null;
@@ -34,7 +36,8 @@ public class NavMeshAgentJumper
 
         while(progress < duration)
         {
-            _agent.transform.position = Vector3.Lerp(offMeshLinkData.startPos, offMeshLinkData.endPos, progress / duration);
+            float yOffset = _jumpCurve.Evaluate(progress / duration);
+            _agent.transform.position = Vector3.Lerp(offMeshLinkData.startPos, offMeshLinkData.endPos, progress / duration) + Vector3.up * yOffset;
             progress += Time.deltaTime;
 
             yield return null;

@@ -6,10 +6,19 @@ namespace HW24_25
 {
     public class ExplosiveObject : MonoBehaviour, ITransformPosition
     {
+        private const string ScaleKey = "_Scale";
+        private const string FresnelEdgeKey = "_FresnelEdge";
+        private const float MinPulseValue = 0;
+        private const float MaxPulseValue = 1;
+        private const float PulsationSpeed = 3;
+
         [SerializeField] private ParticleSystem _explodeEffect;
+        [SerializeField] private AudioSource _audioSource;
         [SerializeField] private float _reactionDistance;
         [SerializeField] private int _damage;
         [SerializeField] private float _timeForReaction;
+
+        private MeshRenderer _meshRenderer;
 
         #region Interface
 
@@ -21,6 +30,8 @@ namespace HW24_25
         {
             SphereCollider collider = GetComponent<SphereCollider>();
             collider.radius = _reactionDistance;
+
+            _meshRenderer = GetComponent<MeshRenderer>();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -40,11 +51,43 @@ namespace HW24_25
 
         private IEnumerator ExplodeProcess()
         {
-            _explodeEffect.Play();
+            float progress = _timeForReaction;
+            float scalePulseProgress = 0;
+            float galoPulseProgress = 1;
+            bool hasPulsationLimitReached = true;
 
-            while (_timeForReaction >= 0)
+            while (progress >= 0)
             {
-                _timeForReaction -= Time.deltaTime;
+                foreach (Material material in _meshRenderer.materials)
+                {
+                    material.SetFloat(ScaleKey, scalePulseProgress * 2 * 0.1f);
+                    material.SetFloat(FresnelEdgeKey, galoPulseProgress * 10);
+                }
+
+                if (scalePulseProgress >= MinPulseValue && scalePulseProgress < MaxPulseValue && hasPulsationLimitReached)
+                {
+                    scalePulseProgress += Time.deltaTime * PulsationSpeed;
+                    galoPulseProgress -= Time.deltaTime * PulsationSpeed;
+                }
+                else
+                {
+                    if (scalePulseProgress >= MaxPulseValue)
+                        hasPulsationLimitReached = false;
+
+                    scalePulseProgress -= Time.deltaTime * PulsationSpeed;
+                    galoPulseProgress += Time.deltaTime * PulsationSpeed;
+
+                    if (scalePulseProgress <= MinPulseValue)
+                    {
+                        hasPulsationLimitReached = true;
+                        scalePulseProgress = 0;
+                        galoPulseProgress = 1;
+                    }
+
+                }
+
+                progress -= Time.deltaTime;
+
                 yield return null;
             }
 
@@ -57,6 +100,16 @@ namespace HW24_25
                     damagable.TakeDamage(_damage);
                 }
             }
+
+            _explodeEffect.Play();
+            _audioSource.Play();
+
+            _meshRenderer.enabled = false;
+
+            yield return null;
+
+            while (_audioSource.isPlaying || _explodeEffect.isPlaying)
+                yield return null;
 
             Destroy(gameObject);
         }

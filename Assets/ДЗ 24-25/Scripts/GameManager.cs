@@ -8,7 +8,7 @@ namespace HW24_25
     {
         private const int WalkableAreaMaskIndex = 1;
 
-        [SerializeField] private Character _character;
+        [SerializeField] private HW24_25.Character _character;
         [SerializeField] private PathPointSpawner _pointSpawner;
         [SerializeField] private LayerMask _groundLayerMask;
         [SerializeField] private float _movementRadius;
@@ -43,9 +43,9 @@ namespace HW24_25
             queryFilter.agentTypeID = 0;
             queryFilter.areaMask = NavMesh.AllAreas;
 
-            _mouseController = new PlayerDirectionalMovableMouseController(_character, queryFilter, _groundLayerMask);
+            _mouseController = new PlayerDirectionalMovableMouseController(_character, queryFilter, _groundLayerMask, _character);
 
-            Controller rotatableController = new AlongMovableVelocityRotatableController(_character, _character);
+            Controller rotatableController = new AlongMovableVelocityRotatableController(_character, _character, _character);
             Controller jumpableController = new PlayerJumpableMouseController(_character, _character);
 
             _characterController = new CompositeController(
