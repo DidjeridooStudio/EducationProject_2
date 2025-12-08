@@ -5,6 +5,5 @@ namespace HW24_25
     public interface IDamagable : ITransformPosition
     {
         void TakeDamage(int damage);
-        void GetHealing(int damage);
     }
 }

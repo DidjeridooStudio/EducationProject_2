@@ -19,6 +19,9 @@ namespace HW24_25
                 return;
 
             _value -= damage;
+
+            if (_value < 0)
+                _value = 0;
         }
 
         public void GetHealing(int value)

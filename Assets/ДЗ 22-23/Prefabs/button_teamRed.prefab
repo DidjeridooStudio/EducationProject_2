@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1772689107898275641}
   - component: {fileID: 5414749314519902032}
   - component: {fileID: 1128535344630623394}
+  - component: {fileID: 4361143112035873884}
   - component: {fileID: 2936578414925934416}
   - component: {fileID: 9023375065899864061}
   m_Layer: 0
@@ -100,11 +101,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a96318b3675a4a045a6677a8f0c57c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explodeEffect: {fileID: 1172375297825057802}
-  _audioSource: {fileID: 9023375065899864061}
+  _objectView: {fileID: 4361143112035873884}
   _reactionDistance: 4
   _damage: 30
-  _timeForReaction: 2.5
+  _timeForReaction: 3
+--- !u!114 &4361143112035873884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7602797503603671083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63bb0bf3502a294dbc11c4d46c13b2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosiveObject: {fileID: 1128535344630623394}
+  _meshRenderer: {fileID: 5414749314519902032}
+  _explodeEffect: {fileID: 1172375297825057802}
+  _audioSource: {fileID: 9023375065899864061}
 --- !u!135 &2936578414925934416
 SphereCollider:
   m_ObjectHideFlags: 0

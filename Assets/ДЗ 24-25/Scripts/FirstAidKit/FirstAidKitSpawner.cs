@@ -16,21 +16,22 @@ namespace HW24_25
         [SerializeField] private GameObject _firstAidKitPrefab;
         [SerializeField] private TMP_Text _tMP_Text;
 
-        private float _timeForSpawn;
         private Coroutine _spawnProcess;
         private NavMeshQueryFilter _queryFilter;
         private NavMeshPath _pathToTarget;
+        private WaitForSeconds _waitForSeconds;
 
         public bool InProcess => _spawnProcess != null;
 
         private void Awake()
         {
-            _timeForSpawn = _spawnTime;
             _pathToTarget = new NavMeshPath();
 
             _queryFilter = new NavMeshQueryFilter();
             _queryFilter.agentTypeID = 0;
             _queryFilter.areaMask = NavMesh.AllAreas;
+
+            _waitForSeconds = new WaitForSeconds(_spawnTime);
         }
 
         private void Update()
@@ -55,13 +56,7 @@ namespace HW24_25
         {
             while(true)
             {
-                while (_timeForSpawn >= 0)
-                {
-                    _timeForSpawn -= Time.deltaTime;
-                    yield return null;
-                }
-
-                _timeForSpawn = _spawnTime;
+                yield return _waitForSeconds;
 
                 Vector3 _spawnPosition = Vector3.zero;
 

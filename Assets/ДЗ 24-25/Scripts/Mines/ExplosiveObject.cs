@@ -6,19 +6,19 @@ namespace HW24_25
 {
     public class ExplosiveObject : MonoBehaviour, ITransformPosition
     {
-        private const string ScaleKey = "_Scale";
-        private const string FresnelEdgeKey = "_FresnelEdge";
-        private const float MinPulseValue = 0;
-        private const float MaxPulseValue = 1;
-        private const float PulsationSpeed = 3;
-
-        [SerializeField] private ParticleSystem _explodeEffect;
-        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private ExplosiveObjectView _objectView;
         [SerializeField] private float _reactionDistance;
         [SerializeField] private int _damage;
         [SerializeField] private float _timeForReaction;
 
         private MeshRenderer _meshRenderer;
+        private Coroutine _explodeProcess;
+        private ExplosivePulsation _explosivePulsation;
+
+        private bool _isCountDownOver;
+
+        public bool InProcess => _explodeProcess != null;
+        public bool IsCountDownOver => _isCountDownOver;
 
         #region Interface
 
@@ -32,13 +32,21 @@ namespace HW24_25
             collider.radius = _reactionDistance;
 
             _meshRenderer = GetComponent<MeshRenderer>();
+
+            _explosivePulsation = new ExplosivePulsation(_meshRenderer);
+        }
+
+        private void Update()
+        {
+            if(InProcess)
+                _explosivePulsation.Update();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<IDamagable>(out IDamagable damagable))
+            if (other.TryGetComponent<IDamagable>(out IDamagable damagable) && InProcess == false)
             {
-                StartCoroutine(ExplodeProcess());
+                _explodeProcess = StartCoroutine(ExplodeProcess());
             }
         }
 
@@ -51,45 +59,7 @@ namespace HW24_25
 
         private IEnumerator ExplodeProcess()
         {
-            float progress = _timeForReaction;
-            float scalePulseProgress = 0;
-            float galoPulseProgress = 1;
-            bool hasPulsationLimitReached = true;
-
-            while (progress >= 0)
-            {
-                foreach (Material material in _meshRenderer.materials)
-                {
-                    material.SetFloat(ScaleKey, scalePulseProgress * 2 * 0.1f);
-                    material.SetFloat(FresnelEdgeKey, galoPulseProgress * 10);
-                }
-
-                if (scalePulseProgress >= MinPulseValue && scalePulseProgress < MaxPulseValue && hasPulsationLimitReached)
-                {
-                    scalePulseProgress += Time.deltaTime * PulsationSpeed;
-                    galoPulseProgress -= Time.deltaTime * PulsationSpeed;
-                }
-                else
-                {
-                    if (scalePulseProgress >= MaxPulseValue)
-                        hasPulsationLimitReached = false;
-
-                    scalePulseProgress -= Time.deltaTime * PulsationSpeed;
-                    galoPulseProgress += Time.deltaTime * PulsationSpeed;
-
-                    if (scalePulseProgress <= MinPulseValue)
-                    {
-                        hasPulsationLimitReached = true;
-                        scalePulseProgress = 0;
-                        galoPulseProgress = 1;
-                    }
-
-                }
-
-                progress -= Time.deltaTime;
-
-                yield return null;
-            }
+            yield return new WaitForSeconds(_timeForReaction);
 
             Collider[] colliders = Physics.OverlapSphere(transform.position, _reactionDistance);
 
@@ -101,17 +71,7 @@ namespace HW24_25
                 }
             }
 
-            _explodeEffect.Play();
-            _audioSource.Play();
-
-            _meshRenderer.enabled = false;
-
-            yield return null;
-
-            while (_audioSource.isPlaying || _explodeEffect.isPlaying)
-                yield return null;
-
-            Destroy(gameObject);
+            _isCountDownOver = true;
         }
     }
 }

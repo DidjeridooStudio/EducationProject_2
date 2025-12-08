@@ -8,9 +8,9 @@ namespace HW24_25
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<IDamagable>(out IDamagable damagable))
+            if (other.TryGetComponent<IHealable>(out IHealable healable))
             {
-                damagable.GetHealing(_addedHealth);
+                healable.GetHealing(_addedHealth);
                 Destroy(gameObject);
             }
         }

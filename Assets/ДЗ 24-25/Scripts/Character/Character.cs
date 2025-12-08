@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace HW24_25
 {
-    public class Character : MonoBehaviour, IDirectionalMovable, IDirectionalRotatable, IDamagable, IJumpable, ISetTargetPosition
+    public class Character : MonoBehaviour, IDirectionalMovable, IDirectionalRotatable, IDamagable, IHealable, IJumpable, ISetTargetPosition
     {
         [SerializeField] private float _movementSpeed;
         [SerializeField] private float _rotationSpeed;
@@ -52,6 +52,8 @@ namespace HW24_25
         {
             _mover.Update(Time.deltaTime);
             _rotator.Update(Time.deltaTime);
+
+            _agent.nextPosition = transform.position;
         }
 
         #region interface
