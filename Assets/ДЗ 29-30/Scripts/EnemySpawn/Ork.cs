@@ -1,5 +1,5 @@
-
 using UnityEngine;
+using static HW29_30.EnemiesSettings;
 
 namespace HW29_30
 {
@@ -9,13 +9,13 @@ namespace HW29_30
         [SerializeField] private int _stamina;
         [SerializeField] private int _strength;
 
-        public void Initialize(int health, int damage, float attackSpeed, int stamina, int strength)
+        public void Initialize(OrkConfig config)
         {
-            _health = health;
-            _damage = damage;
-            _attackSpeed = attackSpeed;
-            _stamina = stamina;
-            _strength = strength;
+            Health = config.Health;
+            Damage = config.Damage;
+            _attackSpeed = config.AttackSpeed;
+            _stamina = config.Stamina;
+            _strength = config.Strength;
         }
     }
 }

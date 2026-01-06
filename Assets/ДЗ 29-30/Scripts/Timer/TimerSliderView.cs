@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace HW29_30
 {
@@ -17,13 +16,11 @@ namespace HW29_30
             _timer = timer;
             OnTimeReseted();
             _timer.RemainTime.Changed += OnTimeChanged;
-            _timer.RemainTime.Reseted += OnTimeReseted;
         }
 
         private void OnDestroy()
         {
             _timer.RemainTime.Changed -= OnTimeChanged;
-            _timer.RemainTime.Reseted -= OnTimeReseted;
         }
         
         private void ConfigureSlider()
@@ -40,7 +37,10 @@ namespace HW29_30
 
         private void OnTimeChanged()
         {
-            ShowRemainTime();
+            if (_timer.IsTimeReseted)
+                OnTimeReseted();
+            else
+                ShowRemainTime();
         }
 
         private void OnTimeReseted()

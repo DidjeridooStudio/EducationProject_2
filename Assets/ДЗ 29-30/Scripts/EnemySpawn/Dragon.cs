@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using static HW29_30.EnemiesSettings;
 
 namespace HW29_30
 {
@@ -9,13 +10,13 @@ namespace HW29_30
         [SerializeField] private int _mana;
         [SerializeField] private int _age;
 
-        public void Initialize(int health, int damage, float fireballSpeed, int mana, int age)
+        public void Initialize(DragonConfig config)
         {
-            _health = health;
-            _damage = damage;
-            _fireballSpeed = fireballSpeed;
-            _mana = mana;
-            _age = age;
+            Health = config.Health;
+            Damage = config.Damage;
+            _fireballSpeed = config.FireballSpeed;
+            _mana = config.Mana;
+            _age = config.Age;
         }
     }
 }

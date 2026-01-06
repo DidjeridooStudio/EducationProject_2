@@ -1,4 +1,7 @@
+using HW29_30.HW29_30;
+using System.Collections.Generic;
 using UnityEngine;
+using static HW29_30.EnemiesSettings;
 
 namespace HW29_30
 {
@@ -9,9 +12,19 @@ namespace HW29_30
 
         private void Awake()
         {
-            _enemySpawner.SpawnOrks(_enemiesSettings.OrkConfigs);
-            _enemySpawner.SpawnElfs(_enemiesSettings.ElfConfigs);
-            _enemySpawner.SpawnDragons(_enemiesSettings.DragonConfigs);
+            List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
+
+            _enemyConfigs.AddRange(_enemiesSettings.OrkConfigs);
+            _enemySpawner.SpawnEnemy(_enemyConfigs);
+            _enemyConfigs.Clear();
+
+            _enemyConfigs.AddRange(_enemiesSettings.ElfConfigs);
+            _enemySpawner.SpawnEnemy(_enemyConfigs);
+            _enemyConfigs.Clear();
+
+            _enemyConfigs.AddRange(_enemiesSettings.DragonConfigs);
+            _enemySpawner.SpawnEnemy(_enemyConfigs);
+            _enemyConfigs.Clear();
         }
     }
 }

@@ -10,6 +10,10 @@ namespace HW29_30
         private Coroutine _countdownProcess;
         private MonoBehaviour _coroutineRunner;
 
+        public float CountdownTime => _countdownTime;
+
+        public bool IsTimeReseted => _remainTime.Value.Equals(_countdownTime) == true;
+
         public Timer(MonoBehaviour coroutineRunner, float countdownTime)
         {
             _coroutineRunner = coroutineRunner;
@@ -22,7 +26,6 @@ namespace HW29_30
 
         public void SetTime(float countdownTime)
         {
-            _remainTime.InitialValue = countdownTime;
             _countdownTime = countdownTime;
             RestartCountdown();
         }

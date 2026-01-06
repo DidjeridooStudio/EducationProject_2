@@ -1,52 +1,57 @@
+using HW29_30.HW29_30;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace HW29_30
 {
     public class Inventory
     {
-        private List<Item> _items;
+        private List<Item> _items1;
 
-        public int CurrentSize => _items.Sum(item => item.Count);
+        private Dictionary<Item, int> _items;
 
-        public int MaxSize { get; private set; }
+        public int CurrentSize => _items.Values.Sum();
 
-        public IReadOnlyList<IReadOnlyItem> Items => _items;
+        public int MaxSize { get; }
 
-        public Inventory(List<Item> items, int maxSize)
+        public IReadOnlyDictionary<IReadOnlyItem, int> Items => (IReadOnlyDictionary<IReadOnlyItem, int>)_items;
+
+        public Inventory(Dictionary<Item, int> items, int maxSize)
         {
-            _items = new List<Item>(items);
+            _items = new Dictionary<Item, int>(items);
 
-            if (maxSize < 0)
-            {
-                Debug.LogError(nameof(maxSize));
-                return;
-            }
+            if (maxSize <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxSize), "The max size cannot be negative or cannot be equal to zero");
 
             MaxSize = maxSize;
         }
 
-        public bool IsEnoughSpace(Item item) => CurrentSize + item.Count > MaxSize;
+        public bool IsEnoughSpace(Item item, int count) => CurrentSize + count <= MaxSize;
 
-        public void Add(Item item)
+        public void Add(Item item, int count)
         {
-            if (IsEnoughSpace(item) == false)
-                return;
+            if (IsEnoughSpace(item, count) == false)
+                throw new ArgumentOutOfRangeException(nameof(item), "Insufficient inventory space");
 
-            _items.Add(item);
+            _items.Add(item, count);
         }
 
-        public List<Item> GetItemsBy(string name, int count)
+        public Dictionary<Item, int> GetItemsBy(Item item, int count)
         {
-            List<Item> selectedItems = new List<Item>();
+            Dictionary<Item, int> selectedItems = new Dictionary<Item, int>();
 
-            for (int i = 0; i < count; i++)
+            if (_items[item] >= count)
             {
-                Item item = _items.First(item => item.Name == name);
-                selectedItems.Add(item);
+                count = _items[item];
                 _items.Remove(item);
             }
+            else
+            {
+                _items[item] -= count;
+            }
+
+            selectedItems.Add(item, count);
 
             return selectedItems;
         }
@@ -57,16 +62,14 @@ namespace HW29_30
 {
     public class Item : IReadOnlyItem
     {
-        public string Name { get; private set; }
-        public int Count { get; private set; }
+        public string Name { get; }
     }
-}
 
-namespace HW29_30
-{
-    public interface IReadOnlyItem
+    namespace HW29_30
     {
-        string Name { get; }
-        int Count { get; }
+        public interface IReadOnlyItem
+        {
+            string Name { get; }
+        }
     }
 }

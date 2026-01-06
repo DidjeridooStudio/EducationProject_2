@@ -17,7 +17,7 @@ namespace HW29_30
         {
             _waitShiftTime = new WaitForSeconds(ShiftTime);
 
-            StartCoroutine(SetRandomTarger());
+            StartCoroutine(SetRandomTarget());
         }
 
         public void Update()
@@ -25,7 +25,7 @@ namespace HW29_30
             transform.Translate(_currentTarget * _moveSpeed * Time.deltaTime, Space.World);
         }
 
-        private IEnumerator SetRandomTarger()
+        private IEnumerator SetRandomTarget()
         {
             while(true)
             {

@@ -1,10 +1,11 @@
 using UnityEngine;
+using static HW29_30.EnemiesSettings;
 
 namespace HW29_30
 {
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] protected int _health;
-        [SerializeField] protected int _damage;
+        [SerializeField] protected int Health;
+        [SerializeField] protected int Damage;
     }
 }

@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using static HW29_30.EnemiesSettings;
 
 namespace HW29_30
 {
@@ -9,13 +10,13 @@ namespace HW29_30
         [SerializeField] private int _agility;
         [SerializeField] private int _charisma;
 
-        public void Initialize(int health, int damage, float attackRange, int agility, int charisma)
+        public void Initialize(ElfConfig config)
         {
-            _health = health;
-            _damage = damage;
-            _attackRange = attackRange;
-            _agility = agility;
-            _charisma = charisma;
+            Health = config.Health;
+            Damage = config.Damage;
+            _attackRange = config.AttackRange;
+            _agility = config.Agility;
+            _charisma = config.Charisma;
         }
     }
 }

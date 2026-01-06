@@ -13,7 +13,7 @@ namespace HW29_30
         {
             _wallet = wallet;
 
-            foreach (ReactiveElement<CurrencyType, int> currency in _wallet.Currencies)
+            foreach (IReadOnlyElement<CurrencyType, int> currency in _wallet.Currencies)
                 currency.Changed += OnCurrencyValueChanged;
 
             ShowCurrencyList();
@@ -21,7 +21,7 @@ namespace HW29_30
 
         private void OnDestroy()
         {
-            foreach (ReactiveElement<CurrencyType, int> currency in _wallet.Currencies)
+            foreach (IReadOnlyElement<CurrencyType, int> currency in _wallet.Currencies)
                 currency.Changed -= OnCurrencyValueChanged;
         }
 
@@ -29,7 +29,7 @@ namespace HW29_30
         {
             string text = "";
 
-            foreach (ReactiveElement<CurrencyType, int> currency  in _wallet.Currencies)
+            foreach (IReadOnlyElement<CurrencyType, int> currency  in _wallet.Currencies)
             {
                 text += $"{currency.Type}: {currency.Value}\n";
             }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 namespace HW29_30
@@ -27,13 +26,11 @@ namespace HW29_30
             _heartGroupChild = new List<GameObject>();
             OnTimeReseted();
             _timer.RemainTime.Changed += OnTimeChanged;
-            _timer.RemainTime.Reseted += OnTimeReseted;
         }
 
         private void OnDestroy()
         {
             _timer.RemainTime.Changed -= OnTimeChanged;
-            _timer.RemainTime.Reseted -= OnTimeReseted;
         }
 
         private void FillHeartGroup()
@@ -53,18 +50,28 @@ namespace HW29_30
 
         private void OnTimeChanged()
         {
-            if (InProcess == false)
-                _destroyHeartProcess = StartCoroutine(DestroyHeartsProcess());
+            if (_timer.IsTimeReseted)
+            {
+                OnTimeReseted();
+            }
+            else
+            {
+                if (InProcess == false)
+                    _destroyHeartProcess = StartCoroutine(DestroyHeartsProcess());
+            }
         }
 
         private IEnumerator DestroyHeartsProcess()
         {
-            Destroy(_heartGroupChild[0]);
-            _heartGroupChild.Remove(_heartGroupChild[0]);
+            if (_heartGroupChild.Count != 0)
+            {
+                Destroy(_heartGroupChild[0]);
+                _heartGroupChild.Remove(_heartGroupChild[0]);
 
-            yield return _waitForSeconds;
+                yield return _waitForSeconds;
 
-            _destroyHeartProcess = null;
+                _destroyHeartProcess = null;
+            }
         }
 
         private void OnTimeReseted()
