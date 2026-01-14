@@ -1,0 +1,89 @@
+using HW22_23;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.EventSystems;
+
+namespace HW_31
+{
+    public class PlayerDirectionalMovableMouseController : Controller
+    {
+        private const int StartCornerIndex = 0;
+        private const int TargetCornerIndex = 1;
+        private const int LeftMouseButton = 0;
+        private const float MinDistanceToTarget = 0.05f;
+
+        private IDirectionalMovable _movable;
+        private ISetTargetPosition _setTargetPosition;
+        private NavMeshQueryFilter _queryFilter;
+        private NavMeshPath _pathToTarget;
+        private Camera _mainCamera;
+        private LayerMask _groundLayerMask;
+
+        private Vector3 _targetPosition;
+
+        public bool HasValidTargetPosition => _targetPosition != Vector3.zero;
+
+        public Vector3 TargetPosition => _targetPosition;
+
+        public PlayerDirectionalMovableMouseController(IDirectionalMovable movable, NavMeshQueryFilter queryFilter, LayerMask groundLayerMask, ISetTargetPosition setTargetPosition)
+        {
+            _movable = movable;
+            _queryFilter = queryFilter;
+            _groundLayerMask = groundLayerMask;
+
+            _mainCamera = Camera.main;
+            _pathToTarget = new NavMeshPath();
+            _targetPosition = Vector3.zero;
+            _setTargetPosition = setTargetPosition;
+        }
+
+        protected override void UpdateLogic(float deltaTime)
+        {
+            if (Input.GetMouseButtonDown(LeftMouseButton))
+                SetTargerPosition();
+
+            if (HasValidTargetPosition)
+                TryGetTargetPosition();
+            else
+                _movable.SetMoveDirection(Vector3.zero);
+        }
+
+        private void SetTargerPosition()
+        {
+            Ray Ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(Ray, out RaycastHit hitinfo, 100, _groundLayerMask) && EventSystem.current.IsPointerOverGameObject() == false)
+                _targetPosition = hitinfo.point;
+            else
+                _targetPosition = Vector3.zero;
+        }
+
+        private void TryGetTargetPosition()
+        {
+            if (NavMeshUtils.TryGetPath(_movable.Position, _targetPosition, _queryFilter, _pathToTarget))
+            {
+                float distanceToTarget = NavMeshUtils.GetPathLength(_pathToTarget);
+
+                if (IsTargetReached(distanceToTarget))
+                {
+                    _targetPosition = Vector3.zero;
+                    return;
+                }
+
+                Vector3 direction = _pathToTarget.corners[TargetCornerIndex] - _pathToTarget.corners[StartCornerIndex];
+                _movable.SetMoveDirection(direction);
+                _setTargetPosition.SetTargetPosition(_targetPosition);
+
+                return;
+            }
+            else
+            {
+                _targetPosition = Vector3.zero;
+            }
+
+            _movable.SetMoveDirection(Vector3.zero);
+        }
+
+        private bool IsTargetReached(float distanceToTarget) => distanceToTarget <= MinDistanceToTarget;
+    }
+}
