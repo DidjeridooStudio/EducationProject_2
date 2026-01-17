@@ -14,7 +14,6 @@ namespace HW_31
         [field: SerializeField] public DefeatConditions DefeatConditions {  get; private set; }
         [field: SerializeField] public int EnemyNumbersToDefeat {  get; private set; }
 
-        [field: SerializeField] public CharacterConfig CharacterConfig {  get; private set; }
         [field: SerializeField] public Vector3 CharacterSpawnPoint {  get; private set; }
 
         [field: SerializeField] public EvilCactusConfig EvilCactusConfig {  get; private set; }

@@ -12,6 +12,7 @@ namespace HW_31
         private void Awake()
         {
             LevelConfig levelConfig = Resources.Load<LevelConfig>("Configs/LevelConfig");
+            CharacterConfig characterConfig = Resources.Load<CharacterConfig>("Configs/CharacterConfig");
 
             _controllersUpdateService = new CharactersControllersUpdateService();
             ControllersFactory controllersFactory = new ControllersFactory();
@@ -22,7 +23,11 @@ namespace HW_31
 
             EvilCactusSpawner evilCactusSpawner =  new EvilCactusSpawner(enemiesFactory, levelConfig.EvilCactusConfig, levelConfig.EnemiesSpawnPoints, this);
 
-            _gameplayCircle = new GameplayCircle(characterFactory, levelConfig, enemyHolder, evilCactusSpawner, _gameView);
+            ConditionsFactory conditionsFactory = new ConditionsFactory();
+
+            GameModeFactory gameModeFactory = new GameModeFactory(levelConfig, enemyHolder, evilCactusSpawner, conditionsFactory, _gameView);
+
+            _gameplayCircle = new GameplayCircle(characterFactory, levelConfig, characterConfig, gameModeFactory);
             _gameplayCircle.Prepare();
             _gameplayCircle.Launch();
         }

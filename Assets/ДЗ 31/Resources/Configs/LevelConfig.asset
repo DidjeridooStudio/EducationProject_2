@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 606520bab0f9f2b47be8d3583445a584, type: 3}
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
-  <VictoryConditions>k__BackingField: 0
-  <EnemyToKill>k__BackingField: 1
+  <VictoryConditions>k__BackingField: 1
+  <EnemyToKill>k__BackingField: 5
   <TimeToWin>k__BackingField: 5
   <DefeatConditions>k__BackingField: 0
-  <EnemyNumbersToDefeat>k__BackingField: 2
-  <CharacterConfig>k__BackingField: {fileID: 11400000, guid: 46eb2bf4df096eb4b866762b8fa3eaf9,
-    type: 2}
+  <EnemyNumbersToDefeat>k__BackingField: 10
   <CharacterSpawnPoint>k__BackingField: {x: 0, y: 0, z: -17.5}
   <EvilCactusConfig>k__BackingField: {fileID: 11400000, guid: 9756f2475a0eb724e919c2100d12290a,
     type: 2}
@@ -26,4 +24,4 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 18}
   - {x: 18.4, y: 0, z: 0}
   - {x: -18.1, y: 0, z: 39.7}
-  <EnemiesCooldown>k__BackingField: 1
+  <EnemiesCooldown>k__BackingField: 2

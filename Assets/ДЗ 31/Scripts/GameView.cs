@@ -14,6 +14,7 @@ namespace HW_31
         private EnemyHolder _enemyHolder;
         private GameMode _gameMode;
         private float _currentTimeToWin;
+        private bool _isRunning;
 
         public void Initialize(EnemyHolder enemyHolder, GameMode gameMode)
         {
@@ -21,10 +22,15 @@ namespace HW_31
             _gameMode = gameMode;
             _gameMode.Victory += OnGameModeVictory;
             _gameMode.Defeat += OnGameModeDefeat;
+
+            _isRunning = true;
         }
 
         private void Update()
         {
+            if (_isRunning == false)
+                return;
+
             _currentTimeToWin += Time.deltaTime;
 
             _tMP_Text_LevelTime.text = "Level time: " + Math.Round(_currentTimeToWin, 1);
@@ -46,6 +52,7 @@ namespace HW_31
         {
             _tMP_Text_GameResult.gameObject.SetActive(true);
             _tMP_Text_GameResult.text = text;
+            _isRunning = false;
         }
 
         private void OnDestroy()

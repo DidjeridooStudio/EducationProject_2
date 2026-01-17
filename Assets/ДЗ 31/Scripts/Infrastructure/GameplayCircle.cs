@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace HW_31
 {
@@ -7,41 +6,36 @@ namespace HW_31
     {
         private CharacterFactory _characterFactory;
         private LevelConfig _levelConfig;
+        private CharacterConfig _characterConfig;
         private Character _character;
         private GameMode _gameMode;
-        private EnemyHolder _enemyHolder;
-        private EvilCactusSpawner _evilCactusSpawner;
-        private GameView _gameView;
+        private GameModeFactory _gameModeFactory;
 
         public GameplayCircle(
             CharacterFactory characterFactory,
             LevelConfig levelConfig,
-            EnemyHolder enemyHolder,
-            EvilCactusSpawner evilCactusSpawner,
-            GameView gameView)
+            CharacterConfig characterConfig,
+            GameModeFactory gameModeFactory)
         {
             _characterFactory = characterFactory;
             _levelConfig = levelConfig;
-            _enemyHolder = enemyHolder;
-            _evilCactusSpawner = evilCactusSpawner;
-            _gameView = gameView;
+            _characterConfig = characterConfig;
+            _gameModeFactory = gameModeFactory;
         }
 
         public void Prepare()
         {
-            _character = _characterFactory.CreateCharacter(_levelConfig.CharacterConfig, _levelConfig.CharacterSpawnPoint);
+            _character = _characterFactory.CreateCharacter(_characterConfig, _levelConfig.CharacterSpawnPoint);
         }
 
         public void Launch()
         {
-            _gameMode = new GameMode(_levelConfig, _enemyHolder, _character, _evilCactusSpawner);
+            _gameMode = _gameModeFactory.CreateGameMode(_character);
 
             _gameMode.Victory += OnGameModeVictory;
             _gameMode.Defeat += OnGameModeDefeat;
 
             _gameMode.Start();
-
-            _gameView.Initialize(_enemyHolder, _gameMode);
         }
 
         public void Update(float deltaTime)
